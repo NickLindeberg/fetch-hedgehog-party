@@ -2,9 +2,13 @@ const getHedgehogs = () => {
   $('#hedgehog-info').html('');
 
   fetch(`https://hedgehog-party.herokuapp.com/api/v1/invites`)
+  // Makes a fetch call to the above app...
     .then(response => response.json())
+    // jsonify the response
     .then(hedgehogs => appendHedgehogs(hedgehogs))
+    // passes json object into the function below to create html for us
     .catch(error => console.error({ error }));
+    // unless there is an error which will give us a console log error message of error
 };
 
 const appendHedgehogs = (hedgehogs) => {
@@ -30,11 +34,34 @@ const appendHedgehog = (hedgehog) => {
 };
 
 const addNewHedgehog = () => {
-  console.log("we are in the addNewHedgehog function");
+  var name = getElementById("name").value
+  var hogletsCount = getElementById("hoglets").value
+  var allergies = getElementById("allergies").value
+  fetch('https://hedgehog-party.herokuapp.com/api/v1/invites', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: name,
+      hoglets: hogletsCount,
+      allergies: allergies
+    })
+  })
+  .then(response => response.json())
+  .then(hedgehogs => appendHedgehogs(hedgehogs))
+  .catch(error => console.error({ error }));
 };
 
-const unInviteHedgehog = () => {
-  console.log("we are in the unInviteHedgehog function");
+const unInviteHedgehog = (id) => {
+  var name = getElementById("name").value
+  var hogletsCount = getElementById("hoglets").value
+  var allergies = getElementById("allergies").value
+  fetch('https://hedgehog-party.herokuapp.com/api/v1/invites/${id}', {
+    method: 'DELETE',
+    headers: { 'Access-Control-Allow-Methods': 'DELETE' }
+    })
+  })
+  .then(response => {getHedgehogs()})
+  .catch(error => console.error({ error }));
 };
 
 getHedgehogs();
